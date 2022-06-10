@@ -35,19 +35,20 @@ contract Factory {
         address owner,
         string memory name,
         string memory symbol
-    ) internal {
+    ) internal returns (address) {
         bytes memory data = _encode(owner, name, symbol);
         bytes32 salt = keccak256(abi.encodePacked(data, owner));
         address deployedContract = implementation.cloneDeterministic(salt);
         deployedContract.functionCallWithValue(data, msg.value);
         emit Deployed(owner, implementation, deployedContract, name, symbol);
+        return address(deployedContract);
     }
 
     function deploy(
         address implementation,
         string memory name,
         string memory symbol
-    ) public payable {
-        _deploy(implementation, msg.sender, name, symbol);
+    ) public payable returns (address) {
+        return _deploy(implementation, msg.sender, name, symbol);
     }
 }

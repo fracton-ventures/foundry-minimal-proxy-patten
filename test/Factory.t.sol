@@ -22,7 +22,10 @@ contract FactoryTest is Test, Factory {
             "Sample token",
             "SAMPLE"
         );
-        deploy(address(nft), "Sample token", "SAMPLE");
+        address deployedContract = deploy(address(nft), "Sample token", "SAMPLE");
+        assertEq(NFT(deployedContract).owner(), msg.sender);
+        assertEq(NFT(deployedContract).name(), "Sample token");
+        assertEq(NFT(deployedContract).symbol(), "SAMPLE");
     }
 
     function testDuplicateDeployFail() public {
